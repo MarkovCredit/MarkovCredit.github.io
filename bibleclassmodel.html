@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.post demo</title>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Bible Verse Classification Engine</h1>
+        
+        <p>The Bible is the most popular book in human history. Whether or not you believe the Bible as ground truth, the Bible 
+          <br> is a great resource for history and wisdom. In efforts to showcase some powerful NLP via Blazing Text and answer some <br>
+          Biblical classification questions, I created this Bible Classification Engine. It is still a work in progress (aren't we all?).
+        </p>
+          <br>
+        <p>Enter any verse or consecutive verses and the model will classify into two categories below with a probability estimate. <br>
+        (Not all probability estimates sum to 1 since there may be more than two classifications behind the scenes).</p>
+        <div style="float: left; width: 50%;">
+        <ul>
+          <li>Law</li>
+          <li>History and Government</li>
+          <li>Poetry</li>
+          <li>Major Prophets</li>
+          <li>Minor Prophets</li>
+          <li>Gospels</li>
+          <li>Acts</li>
+          <li>Paul's Letters</li>
+          <li>General Letters</li>
+          <li>Revelation</li>
+        </ul>
+        <label for="input_verse">Enter your verses here (example provided; most verses default to Poetry):</label>
+
+        <form action="https://hf7h1bbxe8.execute-api.us-east-1.amazonaws.com/dev" id="searchForm">
+            <div class="form-group">
+                    
+                <textarea name="input_verse" rows="5" columns="55" id="verse" >The lord is my shepherd I shall not want.</textarea>
+                <input type="submit" value="Search">
+                    
+            </div>
+            <!-- <textarea rows="5" name="s">God said let there be light.</textarea> -->
+            <!-- <input type="text" cols = "40" rows = "5" name="s" placeholder="The lord is my shepherd."> -->
+            <!-- <p><label>Verse: <input type="text" name="s" placeholder="The lord is my shepherd."></label></p> -->
+            
+           
+        </form>
+                    
+            
+            
+    
+
+<div id="result"></div>
+ 
+<script>
+// Attach a submit handler to the form
+$("#searchForm").submit(function( event ) {
+ 
+  // Stop form from submitting normally
+  event.preventDefault();
+ 
+  // Get some values from elements on the page:
+  var $form = $( this ),
+    user_input_text = $form.find( "textarea[name='input_verse']" ).val(),
+    url = $form.attr( "action" );
+    console.log(user_input_text)
+    console.log(url)
+  var posting = $.ajax({
+      type:"POST",
+      url: url,
+      crossDomain: true,
+      data: JSON.stringify({
+                 verses: user_input_text                
+                }),
+      contentType: "application/json",
+      dataType: "json",
+      success:function( data ) {
+          console.log(data)
+          var content = data.body;
+          $( "#result" ).empty().append( content );
+        }
+        });
+ 
+  
+});
+</script>
+ 
+</body>
+</html>
